@@ -20,7 +20,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 		}
 		else
 		{
-			int proximojugador = (jugador == 1)? -1:1;
+			
 			while(!esHoja(tablero))
 			{
 				proximojugador = (proximojugador == 1)? -1:1;
@@ -57,7 +57,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 	
 	private int max(int[] puntajesDeJugadas)
 	{
-		int maxPuntaje = 0;
+		int maxPuntaje = -10;
 		for(int x =0; x<puntajesDeJugadas.length;x++)
 			if(maxPuntaje < puntajesDeJugadas[x])
 				maxPuntaje = puntajesDeJugadas[x];
@@ -66,7 +66,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 	
 	private int min(int[] puntajesDeJugadas)
 	{
-		int minPuntaje = 0;
+		int minPuntaje = 10;
 		for(int x =0; x<puntajesDeJugadas.length;x++)
 			if(minPuntaje > puntajesDeJugadas[x])
 				minPuntaje = puntajesDeJugadas[x];
@@ -84,7 +84,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 			tableroAux[jugada[0]][jugada[1]] = jugador;
 			calcularOpcion(tableroAux,jugador,nroHijo);
 			tableroAux[jugada[0]][jugada[1]] = 0;
-			puntajesDeJugadas[i] = calcularPuntaje(tableroAux);
+			puntajesDeJugadas[i] = calcularOpcion(tableroAux,jugador,nroHijo);
 			
 		}
 		return puntajesDeJugadas;
@@ -117,33 +117,36 @@ public class JugadorReversiImpl implements JugadorReversi{
 		return true;
 	}
 	private boolean esJugadaValida(int[][] tablero, int jugador, int comienzox, int comienzoy)
-	{
-		if(tablero[comienzox][comienzoy] != 0)
-		{
-			return false;
-		}
-		
-		
-		tablero[comienzox][comienzoy] = jugador;
-		int otrojugador = (jugador == 1)?-1:1;
-		
-		int[][] direcciones = {{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}};
-		boolean flag = true;
-		for(int i = 0; i < 7;  i++)
-		{
-			int x = comienzox;
-			int y = comienzoy;
-			if( estaEnTablero(x,y) && tablero[x][y] == otrojugador)
-			{
-				while(tablero[x][y] == otrojugador)
-				{
-					x = x + direcciones[i][0];
-					y = y + direcciones[i][1];
-					flag =( estaEnTablero(x,y) && tablero[x][y] == otrojugador);
-				}
-			}
-		}
-		return flag;
+	{ int [][] direcciones={{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+            int otroJugador;
+            if (tablero[comienzox][comienzoy]!=0){
+                return false;
+            }
+            tablero[comienzox][comienzoy]=jugador;
+            if (jugador==1){
+                otroJugador=-1;
+            }
+            else{
+                otroJugador=1;
+            }
+            for (int i=0;i<=7;i++){
+                int x=comienzox;
+                int y=comienzoy;
+                x=x+direcciones[i][0];
+                y=y+direcciones[i][1];
+                if( estaEnTablero(x,y) && tablero[x][y]==otroJugador){
+                    while (tablero[x][y]==otroJugador){
+                        x=x+direcciones[i][0];
+                        y=y+direcciones[i][1];
+                    }
+                    if( estaEnTablero(x,y) && tablero[x][y]==jugador){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            }
 	}
 	private boolean estaEnTablero(int x, int y)
 	{
@@ -170,7 +173,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 			puntajeSeleccion = calcularOpcion(tableroAux,0,1);
 			tableroAux[Jugada[0]][Jugada[1]] = 0;
 			if(puntajeSeleccion == 1)
-				return transformarEnCelda(Jugada);
+				return new Celda(Jugada[0], Jugada[1]);;
 			else
 				if(puntajeSeleccion > puntaSeleccionActual)
 				{
@@ -180,7 +183,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 					
 					
 		}
-		return transformarEnCelda(mejorJugada);
+		new Celda(mejorJugada[0], mejorJugada[1]);
 	}
 
 }
