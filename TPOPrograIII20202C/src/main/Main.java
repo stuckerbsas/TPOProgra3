@@ -3,6 +3,7 @@ package main;
 import java.util.Scanner;
 
 import minmax.JugadorDePrueba;
+import minmax.JugadorReversiImpl;
 import reversi.JugadorReversi;
 import reversi.Reversi;
 
@@ -14,8 +15,8 @@ public class Main {
 		try {
 			// Clase JugadorDePrueba es únicamente para probar el juego,
 			// esta línea de código no va en el TPO final
-			JugadorReversi jugadorReversi = new JugadorDePrueba(in);
-
+			//JugadorReversi jugadorReversi = new JugadorDePrueba(in);
+			JugadorReversi jugadorReversi = new JugadorReversiImpl();
 			// La clase JugadorMinMaxImpl es la que deben implementar y usar acá
 			// JugadorReversi jugadorReversi = new JugadorReversiImpl();
 
