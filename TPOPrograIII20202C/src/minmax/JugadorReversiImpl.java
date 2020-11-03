@@ -9,40 +9,50 @@ public class JugadorReversiImpl implements JugadorReversi{
 	{
 		return new Celda(posicionEntrada[0], posicionEntrada[1]);
 	}
-	
+	private int contador = 0;
 	private int calcularOpcion(int[][]tablero,int jugador, int nroHijo)
 	{
+		
 		int Seleccion = 0;
 		int[][] tableroAux = tablero;
-		if(esHoja(tablero))
+		try {
+			if(esHoja(tablero))
 		{
 			return calcularPuntaje(tablero);
 		}
 		else
 		{
-			int proximojugador = (jugador == 1)? -1:1;
+			//int proximojugador = (jugador == 1)? -1:1;
 			while(!esHoja(tablero))
 			{
-				proximojugador = (proximojugador == 1)? -1:1;
-				int[] puntajeDeJugadas = Auxiliar(tableroAux,proximojugador,nroHijo +1);
+				int proximojugador = (jugador == 1)? -1:1;
+				int[] puntajeDeJugadas = crearListadoPuntajes(tableroAux,proximojugador,nroHijo +1);
 				if(proximojugador == 1)
 				{
-					return max(puntajeDeJugadas);
+					Seleccion= max(puntajeDeJugadas);
 				}
 				else
 				{
-					return min(puntajeDeJugadas);
+					Seleccion= min(puntajeDeJugadas);
 				}	
 				
 			}
 		}
+		}
+		catch(Exception ex)
+		{
+			System.out.println("calcularOpcion");
+		}
 		return Seleccion;
+		
 	}
 	
 	private int[][] obtenerJugadasValidas(int[][] tablero, int jugador)
 	{
+		
 		int[][] jugadasValidas = new int[64][2];
 		int n=0;
+		try {
 		for(int x=0;x<7;x++)
 			for(int y=0;y<7;y++)
 			{
@@ -52,40 +62,66 @@ public class JugadorReversiImpl implements JugadorReversi{
 					n++;
 				}
 			}
+		}
+		catch(Exception ex)
+		{
+			System.out.println("obtenerJugadasValidas");
+		}
 		return jugadasValidas;
 	}
 	
 	private int max(int[] puntajesDeJugadas)
 	{
 		int maxPuntaje = 0;
+		try {
 		for(int x =0; x<puntajesDeJugadas.length;x++)
 			if(maxPuntaje < puntajesDeJugadas[x])
 				maxPuntaje = puntajesDeJugadas[x];
+		}
+		catch(Exception ex)
+		{
+			System.out.println("man");
+		}
 		return maxPuntaje;
 	}
 	
 	private int min(int[] puntajesDeJugadas)
 	{
 		int minPuntaje = 0;
+		try {
 		for(int x =0; x<puntajesDeJugadas.length;x++)
 			if(minPuntaje > puntajesDeJugadas[x])
 				minPuntaje = puntajesDeJugadas[x];
+		}
+		catch(Exception ex)
+		{
+			System.out.println("min");
+		}
 		return minPuntaje;
 	}
 	
-	private int[] Auxiliar(int[][] tablero, int jugador, int nroHijo)
+	private int[] crearListadoPuntajes(int[][] tablero, int jugador, int nroHijo)
 	{
+		System.out.println(contador);
+		contador++;
 		int[][] tableroAux = tablero;
+		
 		int[][] listadoJugadasValidas = obtenerJugadasValidas(tablero,jugador);
 		int[] puntajesDeJugadas = new int[64];
-		for(int i =0; i< listadoJugadasValidas.length; i++)
+		try {
+			for(int i =0; i< listadoJugadasValidas.length; i++)
 		{
 			int[] jugada = listadoJugadasValidas[i];
 			tableroAux[jugada[0]][jugada[1]] = jugador;
 			calcularOpcion(tableroAux,jugador,nroHijo);
 			tableroAux[jugada[0]][jugada[1]] = 0;
-			puntajesDeJugadas[i] = calcularPuntaje(tableroAux);
+			puntajesDeJugadas[i] = calcularOpcion(tableroAux,jugador,nroHijo);
 			
+		}
+		}
+		catch(Exception ex)
+		{
+			System.out.println("Auxiliar");
 		}
 		return puntajesDeJugadas;
 	}
@@ -93,6 +129,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 	{
 		int contadorPC = 0;
 		int contadorJugador = 0;
+		try {
 		for(int x = 0; x<7; x++)
 			for(int y =0;y<7;y++)
 				if(tablero[x][y] == 1)
@@ -106,56 +143,98 @@ public class JugadorReversiImpl implements JugadorReversi{
 				return -1;
 			else
 				return 0;
+		}
+		catch(Exception ex)
+		{
+			System.out.println("calcularPuntaje");
+			return 0;
+		}
 				
 	}
 	private boolean esHoja(int[][] tablero )
 	{
+		try {
 		for(int x = 0; x <7 ; x++)
 			for(int y = 0; y < 7; y++)
 				if(tablero[x][y] == 0)
 					return false;
+		}
+		catch(Exception ex)
+		{
+			System.out.println("esHoja");
+		}
 		return true;
 	}
 	private boolean esJugadaValida(int[][] tablero, int jugador, int comienzox, int comienzoy)
 	{
+		try {
 		if(tablero[comienzox][comienzoy] != 0)
 		{
 			return false;
 		}
+		else {
 		
-		
-		tablero[comienzox][comienzoy] = jugador;
-		int otrojugador = (jugador == 1)?-1:1;
-		
-		int[][] direcciones = {{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}};
-		boolean flag = true;
-		for(int i = 0; i < 7;  i++)
-		{
-			int x = comienzox;
-			int y = comienzoy;
-			if( estaEnTablero(x,y) && tablero[x][y] == otrojugador)
+			tablero[comienzox][comienzoy] = jugador;
+			int otrojugador = (jugador == 1)?-1:1;
+								//   0    1      2    3       4      5       6       7
+			int[][] direcciones = {{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}};
+			boolean flag = false;
+			for(int i = 0; i < 7;  i++)
 			{
-				while(tablero[x][y] == otrojugador)
+				int x = comienzox;
+				int y = comienzoy;
+				x = x + direcciones[i][0];
+				y = y + direcciones[i][1];
+				
+				if( estaEnTablero(x,y) && tablero[x][y] == otrojugador)
 				{
-					x = x + direcciones[i][0];
-					y = y + direcciones[i][1];
-					flag =( estaEnTablero(x,y) && tablero[x][y] == otrojugador);
+					while(tablero[x][y] == otrojugador)
+					{
+						if(x + direcciones[i][0] > -1 && x + direcciones[i][0] <8 && y + direcciones[i][1] > -1 && y + direcciones[i][1] <7) {
+							x = x + direcciones[i][0];
+							y = y + direcciones[i][1];
+						}
+					 
+					}
+					tablero[comienzox][comienzoy] = 0;
+					if	( estaEnTablero(x,y) && tablero[x][y] == jugador)
+						return true;
+					
 				}
+
 			}
+			tablero[comienzox][comienzoy] = 0;
+			
 		}
-		return flag;
+		}
+		catch(Exception ex)
+		{
+			System.out.println("esJugadaValida " + ex.getMessage());
+		}
+		return false;
+		//return flag;
 	}
 	private boolean estaEnTablero(int x, int y)
 	{
+		try {
 		return (x > -1 && y < 8 && y > -1 && y <8);
+		
+		} catch (Exception e) {
+			System.out.print("Es el tablero");
+			return false;
+		}
 	}
 	
 	@Override
 	public Celda devolverJugadaOptima(int[][] tablero) {
 		
-		int[][] listadoJugadasValidas = obtenerJugadasValidas(tablero,1);
+		int[][] tableroAux = new int[8][8];
+		for(int x = 0; x < 8; x++)
+			for(int y = 0; y<8; y++)
+				tableroAux[x][y]=tablero[x][y];
+		int[][] listadoJugadasValidas = obtenerJugadasValidas(tableroAux,1);
 		
-		int[][] tableroAux = tablero;
+		
 		
 		int[] Jugada = listadoJugadasValidas[0];
 		tableroAux[Jugada[0]][Jugada[1]] = 1;
