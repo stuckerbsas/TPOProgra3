@@ -5,10 +5,7 @@ import reversi.JugadorReversi;
 
 public class JugadorReversiImpl implements JugadorReversi{
 	
-	private Celda transformarEnCelda(int[] posicionEntrada)
-	{
-		return new Celda(posicionEntrada[0], posicionEntrada[1]);
-	}
+	
 	private int contador = 0;
 	private int contadorb = 0;
 	private int calcularOpcion(int[][]tablero,int jugador, int nroHijo)
@@ -298,7 +295,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 			puntajeSeleccion = calcularOpcion(tableroAux,0,1);
 			tableroAux[Jugada[0]][Jugada[1]] = 0;
 			if(puntajeSeleccion == 1)
-				return transformarEnCelda(Jugada);
+				return new Celda(Jugada[0], Jugada[1]);
 			else
 				if(puntajeSeleccion > puntaSeleccionActual)
 				{
@@ -308,7 +305,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 					
 					
 		}
-		return transformarEnCelda(mejorJugada);
+		return new Celda(mejorJugada[0], mejorJugada[1]);
 	}
 
 }
