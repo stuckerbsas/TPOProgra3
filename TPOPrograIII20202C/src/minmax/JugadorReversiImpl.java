@@ -10,6 +10,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 		return new Celda(posicionEntrada[0], posicionEntrada[1]);
 	}
 	private int contador = 0;
+	private int contadorb = 0;
 	private int calcularOpcion(int[][]tablero,int jugador, int nroHijo)
 	{
 		
@@ -53,8 +54,8 @@ public class JugadorReversiImpl implements JugadorReversi{
 		int[][] jugadasValidas = new int[64][2];
 		int n=0;
 		try {
-		for(int x=0;x<7;x++)
-			for(int y=0;y<7;y++)
+		for(int x=0;x<=7;x++)
+			for(int y=0;y<=7;y++)
 			{
 				if(esJugadaValida(tablero,jugador,x,y)){
 					jugadasValidas[n][0] = x;
@@ -67,7 +68,39 @@ public class JugadorReversiImpl implements JugadorReversi{
 		{
 			System.out.println("obtenerJugadasValidas");
 		}
+		/*for(int x =0; x< 64;x++)
+			if(jugadasValidas[x][0] != 0 && jugadasValidas[x][1] != 0)
+				System.out.println(jugadasValidas[x][0] + "," + jugadasValidas[x][1] );
+		//System.out.println("-----------------------------------------------------------------------------");
+		//mostrarTablero(tablero);*/
 		return jugadasValidas;
+	}
+	
+	public void mostrarTablero(int[][]tablero)
+	{
+		System.out.println("|Y\\X| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |");
+		System.out.println("----------------------------------------");
+		int contador = 0;
+		for(int x = 0; x< 8 ;x++) {
+			for(int y = 0; y< 8 ;y++)
+				{
+					if(y==0) {
+						System.out.print("| " + contador + " ");
+						contador++;
+					}
+					if(tablero[x][y] == 1)
+						System.out.print("| O ");
+					else
+						if(tablero[x][y]== -1)
+							System.out.print("| X ");
+						else
+							System.out.print("|   ");
+				}
+			System.out.print("|");
+			System.out.println();
+			System.out.println("-------------------------------------");
+		}
+		
 	}
 	
 	private int max(int[] puntajesDeJugadas)
@@ -102,7 +135,13 @@ public class JugadorReversiImpl implements JugadorReversi{
 	
 	private int[] crearListadoPuntajes(int[][] tablero, int jugador, int nroHijo)
 	{
-		System.out.println(contador);
+		if(contadorb == 10000) {
+			System.out.println(contador);
+			contadorb = 0;
+			mostrarTablero(tablero);
+		}
+		else
+			contadorb++;
 		contador++;
 		int[][] tableroAux = tablero;
 		
@@ -130,8 +169,8 @@ public class JugadorReversiImpl implements JugadorReversi{
 		int contadorPC = 0;
 		int contadorJugador = 0;
 		try {
-		for(int x = 0; x<7; x++)
-			for(int y =0;y<7;y++)
+		for(int x = 0; x<=7; x++)
+			for(int y =0;y<=7;y++)
 				if(tablero[x][y] == 1)
 					contadorPC++;
 				else
@@ -154,8 +193,8 @@ public class JugadorReversiImpl implements JugadorReversi{
 	private boolean esHoja(int[][] tablero )
 	{
 		try {
-		for(int x = 0; x <7 ; x++)
-			for(int y = 0; y < 7; y++)
+		for(int x = 0; x <=7 ; x++)
+			for(int y = 0; y <= 7; y++)
 				if(tablero[x][y] == 0)
 					return false;
 		}
@@ -173,26 +212,35 @@ public class JugadorReversiImpl implements JugadorReversi{
 			return false;
 		}
 		else {
-		
-			tablero[comienzox][comienzoy] = jugador;
+			if( comienzox == 7)
+				System.out.print("");
+				tablero[comienzox][comienzoy] = jugador;
 			int otrojugador = (jugador == 1)?-1:1;
 								//   0    1      2    3       4      5       6       7
 			int[][] direcciones = {{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}};
 			boolean flag = false;
-			for(int i = 0; i < 7;  i++)
+			for(int i = 0; i < 8;  i++)
 			{
+				
 				int x = comienzox;
 				int y = comienzoy;
 				x = x + direcciones[i][0];
 				y = y + direcciones[i][1];
-				
+				if(x + direcciones[i][0] > -1 && x + direcciones[i][0] <8 && y + direcciones[i][1] > -1 && y + direcciones[i][1] <8) 
 				if( estaEnTablero(x,y) && tablero[x][y] == otrojugador)
 				{
 					while(tablero[x][y] == otrojugador)
 					{
-						if(x + direcciones[i][0] > -1 && x + direcciones[i][0] <8 && y + direcciones[i][1] > -1 && y + direcciones[i][1] <7) {
+						try {
+							//if(x + direcciones[i][0] > -1 && x + direcciones[i][0] <8 && y + direcciones[i][1] > -1 && y + direcciones[i][1] <8) {
 							x = x + direcciones[i][0];
 							y = y + direcciones[i][1];
+							tablero[x][y] = jugador;
+						
+						}
+						catch(Exception ex)
+						{
+							System.out.println("Subif");
 						}
 					 
 					}
@@ -209,6 +257,7 @@ public class JugadorReversiImpl implements JugadorReversi{
 		}
 		catch(Exception ex)
 		{
+			System.out.println(comienzox + " " + comienzoy);
 			System.out.println("esJugadaValida " + ex.getMessage());
 		}
 		return false;
